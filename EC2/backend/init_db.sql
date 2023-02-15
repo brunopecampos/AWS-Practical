@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS opus_db;
+USE opus_db;
+
+CREATE TABLE IF NOT EXISTS salary (id INT NOT NULL AUTO_INCREMENT, raise_percent FLOAT NOT NULL, PRIMARY KEY (id));
+
+INSERT INTO salary (raise_percent) SELECT (0.5) WHERE NOT EXISTS (SELECT * FROM salary WHERE id = 1);
