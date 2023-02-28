@@ -4,9 +4,9 @@ const fs = require("fs");
 // create a connection to the MySQL database
 const connection = mysql.createConnection({
   // Load Balancer hostname
-  host: "172.17.0.2",
-  user: "root",
-  password: "admin",
+  host: "opus-database.ca9hkxflswkm.us-west-1.rds.amazonaws.com",
+  user: "admin",
+  password: "admin123",
 });
 
 const initScript = fs.readFileSync("init_db.sql").toString();
