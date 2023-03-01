@@ -4,7 +4,7 @@ const fs = require("fs");
 // create a connection to the MySQL database
 const connection = mysql.createConnection({
   // Load Balancer hostname
-  host: "opus-database.ca9hkxflswkm.us-west-1.rds.amazonaws.com",
+  host: "opus-db.ca9hkxflswkm.us-west-1.rds.amazonaws.com",
   user: "admin",
   password: "admin123",
 });

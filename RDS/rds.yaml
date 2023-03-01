@@ -12,7 +12,7 @@ Resources:
       SecurityGroupEgress:
         - DestinationSecurityGroupId: !Ref EC2SecurityGroup2
           Description: !Sub "Rule to allow connections to ${RDSDBInstance} from any instances this security group is attached to"
-          FromPort: !GetAtt RDSDBInstance.Endpoint.Port
+          FromPort: !GetAtt t
           IpProtocol: "tcp"
           ToPort: !GetAtt RDSDBInstance.Endpoint.Port
 
