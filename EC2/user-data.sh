@@ -17,4 +17,4 @@ git sparse-checkout set ./EC2/backend
 # install dependencies and start server
 cd ./EC2/backend
 yarn install
-#node server.js
+node server.js
