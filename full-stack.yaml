@@ -367,3 +367,54 @@ Resources:
       SubnetIds:
         - !Ref EC2Subnet2
         - !Ref EC2Subnet3
+
+  # Bastion Instance
+  EC2NetworkInterface4:
+    Type: "AWS::EC2::NetworkInterface"
+    Properties:
+      Description: ""
+      PrivateIpAddress: !GetAtt EC2Instance.PrivateIp
+      PrivateIpAddresses:
+        - PrivateIpAddress: !GetAtt EC2Instance.PrivateIp
+          Primary: true
+      SubnetId: !Ref EC2Subnet
+      SourceDestCheck: true
+      GroupSet:
+        - !Ref EC2SecurityGroup2
+        - !Ref EC2SecurityGroup5
+  EC2NetworkInterfaceAttachment:
+    Type: "AWS::EC2::NetworkInterfaceAttachment"
+    Properties:
+      NetworkInterfaceId: !Ref EC2NetworkInterface4
+      DeviceIndex: 0
+      InstanceId: !Ref EC2Instance
+      DeleteOnTermination: true
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-0d50e5e845c552faf"
+      InstanceType: "t2.micro"
+      KeyName: "aws_login"
+      AvailabilityZone: !Sub "${AWS::Region}a"
+      Tenancy: "default"
+      SubnetId: "subnet-0e72308114578d93f"
+      EbsOptimized: false
+      SecurityGroupIds:
+        - !Ref EC2SecurityGroup2
+        - !Ref EC2SecurityGroup5
+      SourceDestCheck: true
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sda1"
+          Ebs:
+            Encrypted: false
+            VolumeSize: 8
+            SnapshotId: "snap-0d03332bb41895992"
+            VolumeType: "gp2"
+            DeleteOnTermination: true
+      Tags:
+        - Key: "Name"
+          Value: "opus-bastion"
+      HibernationOptions:
+        Configured: false
+      EnclaveOptions:
+        Enabled: false

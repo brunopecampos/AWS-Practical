@@ -65,6 +65,22 @@ Resources:
         - Key: "Name"
           Value: "opus-igw"
 
+  EC2EIP:
+    Type: "AWS::EC2::EIP"
+    Properties:
+      Domain: "vpc"
+      Tags:
+        - Key: "Name"
+          Value: !Sub "opus-eip-${AWS::Region}c"
+
+  EC2EIP2:
+    Type: "AWS::EC2::EIP"
+    Properties:
+      Domain: "vpc"
+      Tags:
+        - Key: "Name"
+          Value: !Sub "opus-eip-${AWS::Region}a"
+
   EC2NatGateway:
     Type: "AWS::EC2::NatGateway"
     Properties:
@@ -72,7 +88,7 @@ Resources:
       Tags:
         - Key: "Name"
           Value: !Sub "opus-nat-public1-${EC2Subnet.AvailabilityZone}"
-      AllocationId: "eipalloc-0e29f3566d6eb4964"
+      AllocationId: !GetAtt EC2EIP2.AllocationId
 
   EC2NatGateway2:
     Type: "AWS::EC2::NatGateway"
@@ -81,7 +97,7 @@ Resources:
       Tags:
         - Key: "Name"
           Value: !Sub "opus-nat-public2-${EC2Subnet2.AvailabilityZone}"
-      AllocationId: "eipalloc-0240499b928ac2bab"
+      AllocationId: !GetAtt EC2EIP.AllocationId
 
   EC2RouteTable:
     Type: "AWS::EC2::RouteTable"
@@ -158,24 +174,24 @@ Resources:
       InternetGatewayId: !Ref EC2InternetGateway
       VpcId: !Ref EC2VPC
 
-  EC2NetworkInterface:
-    Type: "AWS::EC2::NetworkInterface"
-    Properties:
-      Description: "Interface for NAT Gateway nat-0b109dfeaad95db05"
-      PrivateIpAddress: "10.0.11.187"
-      PrivateIpAddresses:
-        - PrivateIpAddress: "10.0.11.187"
-          Primary: true
-      SubnetId: !Ref EC2Subnet
-      SourceDestCheck: false
-
-  EC2NetworkInterface2:
-    Type: "AWS::EC2::NetworkInterface"
-    Properties:
-      Description: "Interface for NAT Gateway nat-03839ed9b133fa85d"
-      PrivateIpAddress: "10.0.20.247"
-      PrivateIpAddresses:
-        - PrivateIpAddress: "10.0.20.247"
-          Primary: true
-      SubnetId: !Ref EC2Subnet4
-      SourceDestCheck: false
+  #EC2NetworkInterface:
+  #  Type: "AWS::EC2::NetworkInterface"
+  #  Properties:
+  #    Description: "Interface for NAT Gateway nat-0b109dfeaad95db05"
+  #    PrivateIpAddress: "10.0.11.187"
+  #    PrivateIpAddresses:
+  #      - PrivateIpAddress: "10.0.11.187"
+  #        Primary: true
+  #    SubnetId: !Ref EC2Subnet
+  #    SourceDestCheck: false
+#
+#EC2NetworkInterface2:
+#  Type: "AWS::EC2::NetworkInterface"
+#  Properties:
+#    Description: "Interface for NAT Gateway nat-03839ed9b133fa85d"
+#    PrivateIpAddress: "10.0.20.247"
+#    PrivateIpAddresses:
+#      - PrivateIpAddress: "10.0.20.247"
+#        Primary: true
+#    SubnetId: !Ref EC2Subnet4
+#    SourceDestCheck: false
