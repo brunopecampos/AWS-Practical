@@ -17,4 +17,5 @@ git sparse-checkout set ./EC2/backend
 # install dependencies and start server
 cd ./EC2/backend
 yarn install
+echo opus-database-test.ca9hkxflswkm.us-west-1.rds.amazonaws.com > db_endpoint
 node server.js

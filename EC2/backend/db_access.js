@@ -1,10 +1,11 @@
 const mysql = require("mysql2");
 const fs = require("fs");
+const dbEndpoint = fs.readFileSync("./db_endpoint");
 
 // create a connection to the MySQL database
 const connection = mysql.createConnection({
   // Load Balancer hostname
-  host: "opus-database.ca9hkxflswkm.us-west-1.rds.amazonaws.com",
+  host: dbEndpoint,
   user: "admin",
   password: "admin123",
 });

@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Metadata:
+  Generator: "former2"
+Description: ""
+Resources:
+  RDSDBInstance:
+    Type: "AWS::RDS::DBInstance"
+    Properties:
+      DBInstanceIdentifier: "opus-database-test"
+      AllocatedStorage: 20
+      DBInstanceClass: "db.t2.micro"
+      Engine: "mysql"
+      MasterUsername: "admin"
+      MasterUserPassword: "admin123"
+      PreferredBackupWindow: "06:07-06:37"
+      BackupRetentionPeriod: 7
+      AvailabilityZone: !Sub "${AWS::Region}c"
+      PreferredMaintenanceWindow: "sat:08:42-sat:09:12"
+      MultiAZ: false
+      EngineVersion: "8.0.28"
+      AutoMinorVersionUpgrade: true
+      LicenseModel: "general-public-license"
+      PubliclyAccessible: false
+      StorageType: "gp2"
+      Port: 3306
+      StorageEncrypted: false
+      CopyTagsToSnapshot: true
+      MonitoringInterval: 0
+      EnableIAMDatabaseAuthentication: false
+      EnablePerformanceInsights: false
+      DeletionProtection: false
+      DBSubnetGroupName: "opus-subnet-group-test"
+      VPCSecurityGroups:
+        - !ImportValue SgDBInboundId
+      MaxAllocatedStorage: 200
+      DBParameterGroupName: "default.mysql8.0"
+      OptionGroupName: "default:mysql-8-0"
+      CACertificateIdentifier: "rds-ca-2019"
+
+  RDSDBSubnetGroup:
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties:
+      DBSubnetGroupDescription: "subnet group for databse"
+      DBSubnetGroupName: "opus-subnet-group-test"
+      SubnetIds:
+        - !ImportValue SubnetPrivate1aId
+        - !ImportValue SubnetPrivate2cId
