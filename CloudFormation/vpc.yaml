@@ -185,6 +185,9 @@ Resources:
       GroupDescription: "Allow access from bastion instance"
       GroupName: "opus-ssh-bastion-inbound"
       VpcId: !Ref VPC
+      SecurityGroupEgress:
+        - CidrIp: 127.0.0.1/32
+          IpProtocol: "-1"
 
   SgSSHBastionInboundRule:
     Type: "AWS::EC2::SecurityGroupIngress"
@@ -215,10 +218,13 @@ Resources:
       GroupName: "opus-ssh-myIP-inbound"
       VpcId: !Ref VPC
       SecurityGroupIngress:
-        - CidrIp: "191.13.60.249/32"
+        - CidrIp: "189.110.120.72/32"
           FromPort: 22
           IpProtocol: "tcp"
           ToPort: 22
+      SecurityGroupEgress:
+        - CidrIp: 127.0.0.1/32
+          IpProtocol: "-1"
 
   SgDBInbound:
     Type: "AWS::EC2::SecurityGroup"
@@ -226,6 +232,9 @@ Resources:
       GroupDescription: "Allow db access from instances"
       GroupName: "opus-db-inbound"
       VpcId: !Ref VPC
+      SecurityGroupEgress:
+        - CidrIp: 127.0.0.1/32
+          IpProtocol: "-1"
 
   SgDBInboundRule:
     Type: "AWS::EC2::SecurityGroupIngress"
@@ -272,6 +281,9 @@ Resources:
           FromPort: 80
           IpProtocol: "tcp"
           ToPort: 80
+      SecurityGroupEgress:
+        - CidrIp: 127.0.0.1/32
+          IpProtocol: "-1"
 
   SgAlbEC2Inbound:
     Type: "AWS::EC2::SecurityGroup"
@@ -279,6 +291,9 @@ Resources:
       GroupDescription: "Allow alb to access EC2 instance"
       GroupName: "opus-alb-EC2-inbound"
       VpcId: !Ref VPC
+      SecurityGroupEgress:
+        - CidrIp: 127.0.0.1/32
+          IpProtocol: "-1"
 
   SgAlbEC2InboundRule:
     Type: "AWS::EC2::SecurityGroupIngress"
@@ -309,7 +324,7 @@ Outputs:
       Name: VPC
 
   SubnetPublic1aId:
-    Value: !Ref SubnetPrivate1a
+    Value: !Ref SubnetPublic1a
     Export:
       Name: SubnetPublic1aId
   SubnetPrivate1aId:
@@ -326,38 +341,38 @@ Outputs:
       Name: SubnetPrivate2cId
 
   SgSSHBastionInboundId:
-    Value: !Ref SgSSHBastionInbound
+    Value: !GetAtt SgSSHBastionInbound.GroupId
     Export:
       Name: SgSSHBastionInboundId
   SgSSHBastionOutboundId:
-    Value: !Ref SgSSHBastionOutbound
+    Value: !GetAtt SgSSHBastionOutbound.GroupId
     Export:
       Name: SgSSHBastionOutboundId
   SgSSHMyIPInboundId:
-    Value: !Ref SgSSHMyIPInbound
+    Value: !GetAtt SgSSHMyIPInbound.GroupId
     Export:
       Name: SgSSHMyIPInboundId
   SgDBInboundId:
-    Value: !Ref SgDBInbound
+    Value: !GetAtt SgDBInbound.GroupId
     Export:
       Name: SgDBInboundId
   SgDBOutboundId:
-    Value: !Ref SgDBOutbound
+    Value: !GetAtt SgDBOutbound.GroupId
     Export:
       Name: SgDBOutboundId
   SgGithubOutboundId:
-    Value: !Ref SgGithubOutbound
+    Value: !GetAtt SgGithubOutbound.GroupId
     Export:
       Name: SgGithubOutboundId
   SgAlbInternetInboundId:
-    Value: !Ref SgAlbInternetInbound
+    Value: !GetAtt SgAlbInternetInbound.GroupId
     Export:
       Name: SgAlbInternetInboundId
   SgAlbEC2InboundId:
-    Value: !Ref SgAlbEC2Inbound
+    Value: !GetAtt SgAlbEC2Inbound.GroupId
     Export:
       Name: SgAlbEC2InboundId
   SgAlbEC2OutboundId:
-    Value: !Ref SgAlbEC2Outbound
+    Value: !GetAtt SgAlbEC2Outbound.GroupId
     Export:
       Name: SgAlbEC2OutboundId

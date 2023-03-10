@@ -1,6 +1,6 @@
 const mysql = require("mysql2");
 const fs = require("fs");
-const dbEndpoint = fs.readFileSync("./db_endpoint");
+const dbEndpoint = fs.readFileSync("./db_endpoint", "utf-8").replace(/\n/g, "");
 
 // create a connection to the MySQL database
 const connection = mysql.createConnection({

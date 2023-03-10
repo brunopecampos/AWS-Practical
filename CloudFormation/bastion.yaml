@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Metadata:
+  Generator: "former2"
+Description: ""
+Resources:
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-0d50e5e845c552faf"
+      InstanceType: "t2.micro"
+      KeyName: "aws_login"
+      AvailabilityZone: !Sub "${AWS::Region}a"
+      Tenancy: "default"
+      SubnetId: !ImportValue SubnetPublic1aId
+      EbsOptimized: false
+      SecurityGroupIds:
+        - !ImportValue SgSSHBastionOutboundId
+        - !ImportValue SgSSHMyIPInboundId
+      SourceDestCheck: true
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sda1"
+          Ebs:
+            Encrypted: false
+            VolumeSize: 8
+            SnapshotId: "snap-0d03332bb41895992"
+            VolumeType: "gp2"
+            DeleteOnTermination: true
+      Tags:
+        - Key: "Name"
+          Value: "opus-bastion"
+      HibernationOptions:
+        Configured: false
+      EnclaveOptions:
+        Enabled: false
+
+  MyEIP:
+    Type: "AWS::EC2::EIP"
+    Properties:
+      Domain: vpc
+  MyEIPAssociation:
+    Type: "AWS::EC2::EIPAssociation"
+    Properties:
+      InstanceId: !Ref EC2Instance # associate the EIP with the EC2 instance
+      AllocationId: !GetAtt MyEIP.AllocationId # use the EIP allocation ID
+
+
+  #EC2NetworkInterface4:
+  #  Type: "AWS::EC2::NetworkInterface"
+  #  Properties:
+  #    Description: ""
+  #    PrivateIpAddress: !GetAtt EC2Instance.PrivateIp
+  #    SubnetId: !ImportValue SubnetPublic1aId
+  #    SourceDestCheck: true
+  #    GroupSet:
+  #      - !ImportValue SgSSHBastionOutboundId
+  #      - !ImportValue SgSSHMyIPInboundId
+  #EC2NetworkInterfaceAttachment:
+  #  Type: "AWS::EC2::NetworkInterfaceAttachment"
+  #  Properties:
+  #    NetworkInterfaceId: !Ref EC2NetworkInterface4
+  #    DeviceIndex: 0
+  #    InstanceId: !Ref EC2Instance
+  #    DeleteOnTermination: true
+#
