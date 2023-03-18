@@ -163,3 +163,13 @@ Resources:
           Value: "false"
         - Key: "routing.http.x_amzn_tls_version_and_cipher_suite.enabled"
           Value: "false"
+
+  ElasticLoadBalancingV2Listener:
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties:
+      LoadBalancerArn: !Ref ElasticLoadBalancingV2LoadBalancer
+      Port: 80
+      Protocol: "HTTP"
+      DefaultActions:
+        - TargetGroupArn: !Ref ElasticLoadBalancingV2TargetGroup
+          Type: "forward"

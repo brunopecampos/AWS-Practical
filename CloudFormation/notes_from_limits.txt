@@ -1,0 +1,5 @@
+Kifayat will search for semaphore time
+Fog computing. Edge is devices for making desicions and sending messages.
+Related work: will send related paper and summaires
+Crash detection: Not focusing in the detectino of the acident. But in post-detection phase.
+Repetition: it is distante from the real world.

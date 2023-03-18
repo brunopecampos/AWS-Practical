@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Metadata:
+  Generator: "former2"
+Description: ""
+Resources:
+  VPC:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "VPCStack"
+      TemplateURL: "https://opus-bruno-campos-stacks.s3.us-west-1.amazonaws.com/vpc.yaml"
+  Bastion:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "Bastion"
+      TemplateURL: "https://opus-bruno-campos-stacks.s3.us-west-1.amazonaws.com/bastion.yaml"
+    DependsOn: VPC
+  RDS:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "RDS"
+      TemplateURL: "https://opus-bruno-campos-stacks.s3.us-west-1.amazonaws.com/rds.yaml"
+    DependsOn: VPC
+
+  ASG:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "ASG"
+      TemplateURL: "https://opus-bruno-campos-stacks.s3.us-west-1.amazonaws.com/asg.yaml"
+    DependsOn: RDS
+  S3Bucket:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "S3Bucket"
+      TemplateURL: "https://opus-bruno-campos-stacks.s3.us-west-1.amazonaws.com/s3.yaml"
+    DependsOn: ASG

@@ -29,7 +29,7 @@ Resources:
       EnableIAMDatabaseAuthentication: false
       EnablePerformanceInsights: false
       DeletionProtection: false
-      DBSubnetGroupName: "opus-subnet-group"
+      DBSubnetGroupName: !Ref RDSDBSubnetGroup
       VPCSecurityGroups:
         - !ImportValue SgDBInboundId
       MaxAllocatedStorage: 200
