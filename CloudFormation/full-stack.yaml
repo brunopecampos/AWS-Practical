@@ -10,6 +10,13 @@ Resources:
         - Key: "Name"
           Value: "VPCStack"
       TemplateURL: "https://opus-bruno-campos-stacks.s3.us-west-1.amazonaws.com/vpc.yaml"
+  IAM:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "IAM"
+      TemplateURL: "https://opus-bruno-campos-stacks.s3.us-west-1.amazonaws.com/iam.yaml"
   Bastion:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -26,7 +33,15 @@ Resources:
           Value: "RDS"
       TemplateURL: "https://opus-bruno-campos-stacks.s3.us-west-1.amazonaws.com/rds.yaml"
     DependsOn: VPC
-
+  ELB:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Tags:
+        - Key: "Name"
+          Value: "IAM"
+      TemplateURL: "https://opus-bruno-campos-stacks.s3.us-west-1.amazonaws.com/elb.yaml"
+    DependsOn:
+      - RDS
   ASG:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -34,7 +49,9 @@ Resources:
         - Key: "Name"
           Value: "ASG"
       TemplateURL: "https://opus-bruno-campos-stacks.s3.us-west-1.amazonaws.com/asg.yaml"
-    DependsOn: RDS
+    DependsOn:
+      - ELB
+      - IAM
   S3Bucket:
     Type: AWS::CloudFormation::Stack
     Properties:
