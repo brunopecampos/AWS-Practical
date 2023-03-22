@@ -3,24 +3,55 @@ Metadata:
   Generator: "former2"
 Description: ""
 Resources:
+  IAMRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      Path: "/"
+      RoleName: "CloudWatchAgentServerRole"
+      AssumeRolePolicyDocument: '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"ec2.amazonaws.com"},"Action":"sts:AssumeRole"}]}'
+      MaxSessionDuration: 3600
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+      Description: "Allows EC2 instances to call AWS services on your behalf."
+
+  IAMInstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      Path: "/"
+      InstanceProfileName: !Ref IAMRole
+      Roles:
+        - !Ref IAMRole
+
   EC2LaunchTemplate:
     Type: "AWS::EC2::LaunchTemplate"
     Properties:
       LaunchTemplateName: "opus-launch-template-test"
       LaunchTemplateData:
+        IamInstanceProfile:
+          Arn: !GetAtt
+            - IAMInstanceProfile
+            - Arn
         UserData:
           Fn::Base64: !Sub
             - |
               #!/bin/bash
               # install git, node and yarn
-              apt update -y
               curl -fsSL https://deb.nodesource.com/setup_19.x | sudo -E bash -
-              sudo apt-get install -y nodejs git
+              apt update -y
+              apt install -y nodejs git stress
               # For testing reasons
               #sudo apt-get install -y mysql-client
               sudo npm install --global yarn
-              # clone backend subdir of repo
+              # install CloudWatch Agent
               cd /home/ubuntu
+              curl -o ./amazon-cloudwatch-agent.deb https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb 
+              dpkg -i -E ./amazon-cloudwatch-agent.deb
+              mkdir /usr/share/collectd
+              touch /usr/share/collectd/types.db
+              # run CloudWatch Agent
+              curl -o ./cloudwatch-agent.json https://opus-bruno-campos-stacks.s3.us-west-1.amazonaws.com/cloudwatch-agent.json
+              amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:cloudwatch-agent.json -s
+              # clone backend subdir of repo
               git clone --depth 1 --filter=blob:none https://github.com/brunopecampos/AWS-Practical.git --sparse 
               cd AWS-Practical 
               git config --global --add safe.directory $PWD
@@ -50,9 +81,9 @@ Resources:
       LaunchTemplate:
         LaunchTemplateId: !Ref EC2LaunchTemplate
         Version: 1
-      MinSize: 1
-      MaxSize: 1
-      DesiredCapacity: 1
+      MinSize: 2
+      MaxSize: 4
+      DesiredCapacity: 2
       Cooldown: 300
       AvailabilityZones:
         - !Sub "${AWS::Region}a"

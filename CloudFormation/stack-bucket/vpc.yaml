@@ -218,7 +218,7 @@ Resources:
       GroupName: "opus-ssh-myIP-inbound"
       VpcId: !Ref VPC
       SecurityGroupIngress:
-        - CidrIp: "189.110.124.33/32"
+        - CidrIp: "0.0.0.0/0"
           FromPort: 22
           IpProtocol: "tcp"
           ToPort: 22
@@ -266,9 +266,7 @@ Resources:
       VpcId: !Ref VPC
       SecurityGroupEgress:
         - CidrIp: "0.0.0.0/0"
-          FromPort: 443
-          IpProtocol: "tcp"
-          ToPort: 443
+          IpProtocol: "-1"
 
   SgAlbInternetInbound:
     Type: "AWS::EC2::SecurityGroup"
